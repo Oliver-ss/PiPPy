@@ -39,6 +39,11 @@ def stage_backward(
         output_grad_tensors = []
 
         def extract_tensors_with_grads(output_val, grad_val):
+            if isinstance(output_val, (tuple, list)) and len(output_val) == 1:
+                output_val = output_val[0]
+            if isinstance(grad_val, (tuple, list)) and len(grad_val) == 1:
+                grad_val = grad_val[0]
+
             if isinstance(output_val, torch.Tensor):
                 if not output_val.requires_grad and output_val.grad_fn is None:
                     return
