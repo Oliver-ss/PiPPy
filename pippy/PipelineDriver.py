@@ -1605,6 +1605,9 @@ class PipelineDriverBase(torch.nn.Module):
                 grad_value = module_rref.rpc_sync().get_grad(param_qualname)
                 grad_values.append(grad_value)
 
+            if any([grad is None for grad in grad_values]):
+                return
+
             synced_value = torch.sum(torch.stack(grad_values), dim=0)
 
             for module_name, param_qualname in param_set.items():
